@@ -1,0 +1,49 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  environments: dev
+
+tasks:
+  default:
+    cmds:
+      - echo {{.CLI_ARGS}}
+    silent: true
+
+# -- main -- #
+  init:
+    - task terraform -- init
+  plan:
+    - task terraform -- plan
+  apply:
+    - task terraform -- apply
+   # - task ansible-locust -- apply
+  destroy:
+    - task terraform -- destroy
+  version:
+    dir: environments/{{.environments}}
+    cmds:
+      - task -- {{.CLI_ARGS}}
+
+# -- Terraform -- #    
+  terraform:
+    dir: Terraform
+    cmds:
+      - task {{.CLI_ARGS}}
+
+# -- Ansible -- #
+
+  ansible:
+    dir: Ansible
+    cmds: 
+      - task {{.CLI_ARGS}}
+
+  infracost:
+    dir: Terraform
+    cmds:
+    - infracost breakdown --sync-usage-file --usage-file infracost-usage.yml --path . --terraform-plan-flags="-var-file=../environments/{{.environments}}/terraform.tfvars.json"
+
+
+
+
