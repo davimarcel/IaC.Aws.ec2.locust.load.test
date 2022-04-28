@@ -1,0 +1,16 @@
+[all:vars]
+ansible_host_key_checking=False
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_connection=ssh
+ansible_user=ec2-user
+
+[master]
+locust-master ansible_ssh_host=54.91.68.208
+
+[nodes]
+locust-node1 ansible_ssh_host=54.83.95.133
+
+
+
+
+
