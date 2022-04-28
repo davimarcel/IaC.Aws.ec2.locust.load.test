@@ -1,4 +1,4 @@
-###  Export Inventory Ansible File
+###  Export Inventory Ansible File and Services File
 
 resource "local_file" "AnsibleInventory" {
     content = templatefile("inventory.tpl",
@@ -13,6 +13,16 @@ resource "local_file" "AnsibleInventory" {
     depends_on = [module.aws_instance]
 }
 
+resource "local_file" "AnsibleServices" {
+    content = templatefile("services.tpl",
+        {
+            master = data.aws_instances.master.private_ips
+        }
+    )
+    filename = "../Ansible/services/locust-node.service"
+    depends_on = [module.aws_instance]
+}
+
 data "aws_instances" "master" {
     instance_tags = {
         Deploy = "locust"
@@ -20,13 +30,6 @@ data "aws_instances" "master" {
     }
     depends_on = [module.aws_instance]
 }
-
-output "locust-master" {
-   # value = data.aws_instances.master.private_ips
-    value = data.aws_instances.master.public_ips
-}
-
-
 data "aws_instances" "node" {
     instance_tags = {
         Deploy = "locust"
@@ -35,7 +38,5 @@ data "aws_instances" "node" {
     depends_on = [module.aws_instance]
 }
 
-output "locust-nodes" {
-   # value = data.aws_instances.node.private_ips
-   value = data.aws_instances.node.public_ips
-}
+
+
