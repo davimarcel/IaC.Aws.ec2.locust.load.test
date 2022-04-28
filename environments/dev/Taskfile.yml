@@ -1,0 +1,14 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - rm terraform.tfvars.json
+      - ln -s  tfvars_{{.CLI_ARGS}}.json terraform.tfvars.json
+    silent: true
+
