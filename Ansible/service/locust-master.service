@@ -1,0 +1,12 @@
+[Unit]
+Description=Locust Service
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+
+ExecStart=/bin/sh -c '/usr/local/bin/locust -P 8080 -f /home/ec2-user/project/main.py --master'
+[Install]
+WantedBy=multi-user.target

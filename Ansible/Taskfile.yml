@@ -1,0 +1,26 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  locustMaster: "172.29.12.101"
+  locustNode1: "172.29.12.89" 
+  locustNode2: "172.29.12.80"
+
+tasks:
+  default:
+    cmds:
+      - echo {{.locustMaster}}
+    silent: true
+
+  check:
+    cmds:
+      - ssh -o 'StrictHostKeyChecking no' ec2-user@{{.locustMaster}}  cat /etc/ssh/ssh_host_ecdsa_key.pub >> ~/.ssh/known_hosts
+      - ssh -o 'StrictHostKeyChecking no' ec2-user@{{.locustNode1}}  cat /etc/ssh/ssh_host_ecdsa_key.pub >> ~/.ssh/known_hosts
+      - ssh -o 'StrictHostKeyChecking no' ec2-user@{{.locustNode2}}  cat /etc/ssh/ssh_host_ecdsa_key.pub >> ~/.ssh/known_hosts
+
+
+  apply:
+    cmds:
+    - ansible-playbook -i inventory main.yml -v 

@@ -1,0 +1,65 @@
+---
+- name: DevOps Locust All
+  hosts: all
+  become: yes
+  tasks:
+  - name: Install htop
+    yum:
+      name: htop
+      state: present
+  
+  - name: Install Pip3
+    yum:
+      name: python3-pip
+      state: present
+
+  - name: Install locust python package
+    pip:
+      name: locust
+      executable: pip3
+
+  - name: Copy Project
+    copy:
+      src: app/
+      dest: /home/ec2-user
+      owner: ec2-user
+      group: ec2-user
+
+  - name: Copy Service 
+    copy:
+      src: service/
+      dest: /etc/systemd/system
+      owner: root
+      group: root
+
+  - name: Create directory log 
+    file:
+      path: /var/log/locust
+      state: directory
+
+  - name: Just force systemd to daemon-reload
+    ansible.builtin.systemd:
+      daemon_reload: yes
+
+- name: DevOps Locust Master
+  hosts: master
+  become: yes
+  tasks:
+  - name: Start Service Locust
+    ansible.builtin.systemd:
+      name: locust-master
+      state: started
+
+- name: DevOps Locust Nodes
+  hosts: nodes
+  become: yes
+  tasks:
+  - name: Start Service Locust
+    ansible.builtin.systemd:
+      name: locust-node
+      state: started
+
+
+
+
+  
