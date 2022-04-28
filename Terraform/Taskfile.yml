@@ -1,0 +1,26 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  DEFAULT: "Digite: task init | plan | apply | destroy"
+  VAR_FILE: "../environments/dev/terraform.tfvars.json"
+  
+tasks:
+  default:
+    cmds:
+      - echo "{{.DEFAULT}}" | lolcat
+    silent: true
+
+  pre-reque:
+    - terraform apply -target="module.securityGroups" -var-file="{{.VAR_FILE}}" --auto-approve
+  init:
+    - terraform init
+  plan:
+    - terraform plan -var-file="{{.VAR_FILE}}" 
+  apply:
+    - terraform apply -var-file="{{.VAR_FILE}}" --auto-approve
+  destroy:
+    - terraform destroy -var-file="{{.VAR_FILE}}" --auto-approve
+
+
