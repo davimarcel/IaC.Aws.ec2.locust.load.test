@@ -4,4 +4,5 @@ terraform.tfstate
 terraform.tfstate.backup
 .terraform.tfstate.lock.info
 tfvars_v0.json
+.infracost/
 
